@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+
 
 class PaymentController extends Controller
 {
@@ -11,8 +14,12 @@ class PaymentController extends Controller
 	 *
 	 * @return \Illuminate\Http\Response
 	 */
-	public function index()
+	public function index(Response $response, Request $request)
 	{
+	
+	
+		dd($response);
+		return ['todos' => Payment::all()];
 		//
 	}
 	
@@ -25,7 +32,7 @@ class PaymentController extends Controller
 	{
 		//
 		
-		return ['todos' => Payment::all()];
+		
 	}
 	
 	/**
@@ -37,6 +44,9 @@ class PaymentController extends Controller
 	public function store(Request $request)
 	{
 		//
+		
+		dd($request);
+		
 		$payment = new Payment();
 		$payment->fill($request->all());
 		$payment->save();
@@ -50,9 +60,10 @@ class PaymentController extends Controller
 	 * @param  \App\Register  $register
 	 * @return \Illuminate\Http\Response
 	 */
-	public function show(Payment $payment)
+	public function show($id)
 	{
 		//
+		$payment = Payment::find(1);
 	}
 	
 	/**

@@ -18,3 +18,6 @@ Route::get('/', function () {
 
 	Route::resource('payment', 'PaymentController',['only' => ['index', 'store', 'update', 'destroy', 'show']]);
 	Route::resource('register', 'RegisterController',['only' => ['index', 'store', 'update', 'destroy', 'show']]);
+	
+	Route::push('/payment', 'PaymentController@index');
+	
