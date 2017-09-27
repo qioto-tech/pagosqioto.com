@@ -16,8 +16,9 @@ Route::get('/', function () {
 });
 
 
-	Route::resource('payment', 'PaymentController',['only' => ['index', 'store', 'update', 'destroy', 'show']]);
-	Route::resource('register', 'RegisterController',['only' => ['index', 'store', 'update', 'destroy', 'show']]);
+	Route::resource('payment', 'PaymentController');
+	Route::resource('register', 'RegisterController');
 	
-	Route::push('/payment', 'PaymentController@index');
-	
+	//Route::match(['get,post'],'/register/{register}', 'RegisterController@store',['datos' => $_POST, 'nocsrf' => true]);
+	Route::match(['post'],'/register/', 'RegisterController@store');
+

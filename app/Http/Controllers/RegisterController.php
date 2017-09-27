@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Register;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
 {
@@ -36,6 +37,18 @@ class RegisterController extends Controller
     public function store(Request $request)
     {
         //
+        
+    	
+    	$register = new Register();
+    	
+    	$register->fill($request->all());
+    	$register->save();
+    	
+    	$ysqsm = $this->actualizarysqsm($request->order_id);
+ //   	$mce = $this->actualizarmce($request->order_id);
+    	
+    	dd($ysqsm);
+    	
     }
 
     /**
@@ -81,5 +94,21 @@ class RegisterController extends Controller
     public function destroy(Register $register)
     {
         //
+    }
+    
+    private function actualizarysqsm ($orderId)
+    {
+    	$order = DB::connection('yosiquierosermaestro')->update('update orders set state = "APROVADO" where code = ?', [$orderId]);
+    	return $order;
+    }
+    
+    private function actualizarmce ($orderId)
+    {
+    	$datas = DB::connection('yosiquierosermaestro')->select('select persons.*, orders.product_description from persons inner join orders on orders.customer_id = persons.id  where code = ?', [$orderId]);
+    	
+    	foreach ($datas as $data){
+    		$user =  DB::connection('mecapacitoecuador')->insert('',[$data->customer_ci,$pwd,$data->customer_name,$data->customer_lastname,$data->customer_email,'1']);
+    	}
+    	return $user;
     }
 }

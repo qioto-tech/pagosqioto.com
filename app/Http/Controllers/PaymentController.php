@@ -17,9 +17,10 @@ class PaymentController extends Controller
 	public function index(Response $response, Request $request)
 	{
 	
-	
-		dd($response);
-		return ['todos' => Payment::all()];
+
+		var_dump($_POST);
+		
+		//return ['todos' => Payment::all()];
 		//
 	}
 	
@@ -45,12 +46,12 @@ class PaymentController extends Controller
 	{
 		//
 		
-		dd($request);
+		dd($_POST);
 		
-		$payment = new Payment();
+/* 		$payment = new Payment();
 		$payment->fill($request->all());
 		$payment->save();
-		
+ */		
 		return ['created' => true];
 	}
 	
