@@ -15,6 +15,6 @@ class VerifyCsrfToken extends BaseVerifier
     		'register/*',//
     		'web*',
     		'app.pagomedios.com/payments/response',
-
+    		'api*',
     ];
 }

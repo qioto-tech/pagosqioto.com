@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Register;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Redirect;
 
 class RegisterController extends Controller
 {
@@ -16,6 +17,7 @@ class RegisterController extends Controller
     public function index()
     {
         //
+    	$register = Register::find(1);
     }
 
     /**
@@ -37,18 +39,22 @@ class RegisterController extends Controller
     public function store(Request $request)
     {
         //
-        
-    	
     	$register = new Register();
     	
     	$register->fill($request->all());
     	$register->save();
     	
-    	$ysqsm = $this->actualizarysqsm($request->order_id);
- //   	$mce = $this->actualizarmce($request->order_id);
     	
-    	dd($ysqsm);
+    	$ysqsm = $this->actualizarysqsm($request->order_id,$request->order_status);
     	
+    	if($request->authorization_result == '00' && $request->order_status == 'Autorizado'){
+    		$mce = $this->actualizarmce($request->order_id);
+    		//return Redirect::to('http://www.yosiquierosermaestro.com/aprobado/'.$request->order_id);
+    		return Redirect::to('http://yosiquierosermaestro.local/aprobado/'.$request->order_id);
+    	} else {
+    		//return Redirect::to('http://www.yosiquierosermaestro.com/reprobado/'.$request->order_id);
+    		return Redirect::to('http://yosiquierosermaestro.local/reprobado/'.$request->order_id);
+    	}    	
     }
 
     /**
@@ -96,9 +102,9 @@ class RegisterController extends Controller
         //
     }
     
-    private function actualizarysqsm ($orderId)
+    private function actualizarysqsm ($orderId, $order_status)
     {
-    	$order = DB::connection('yosiquierosermaestro')->update('update orders set state = "APROVADO" where code = ?', [$orderId]);
+    	$order = DB::connection('yosiquierosermaestro')->update('update orders set state = ? where code = ?', [$order_status, $orderId]);
     	return $order;
     }
     
@@ -107,7 +113,9 @@ class RegisterController extends Controller
     	$datas = DB::connection('yosiquierosermaestro')->select('select persons.*, orders.product_description from persons inner join orders on orders.customer_id = persons.id  where code = ?', [$orderId]);
     	
     	foreach ($datas as $data){
-    		$user =  DB::connection('mecapacitoecuador')->insert('',[$data->customer_ci,$pwd,$data->customer_name,$data->customer_lastname,$data->customer_email,'1']);
+    		$usuario = 'Aspirante_'.$orderId;
+    		$password = md5($usuario);
+    		$user =  DB::connection('mecapacitoecuador')->insert('insert into TB_USUARIOS(usu_usuario,usu_password,usu_nombre,usu_apellido,usu_mail,usu_perfil) value (?,?,?,?,?,?)',[$usuario,$password,$data->customer_name,$data->customer_lastname,$data->customer_email,'Estudiante']);
     	}
     	return $user;
     }
